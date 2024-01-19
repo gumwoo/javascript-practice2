@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="main.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row" id="product-list">
+
+            <!--
+      <div class="col-sm-4">
+        <img src="https://via.placeholder.com/600" class="w-100">
+        <h5>Card title</h5>
+        <p>가격 : 70000</p>
+        
+      </div>
+<-->
+        </div>
+    </div>
+    <div><button class="btn  custom-button" id="more">더 알아보기</button></div>
+    <div>
+        <select id="productOptions" class="btn  custom-select">
+            <option value="default">추가 옵션 선택</option>
+            <option value="sortByPrice">가격순 정렬</option>
+            <option value="sortByName">상품명 가나다순 정렬</option>
+            <option value="filterByPrice">6만원 이하 상품만 보기</option>
+        </select>
+    </div>
+
+
+    <script>
+        var products = [{
+                id: 0,
+                price: 70000,
+                title: 'Blossom Dress'
+            },
+            {
+                id: 1,
+                price: 50000,
+                title: 'Springfield Shirt'
+            },
+            {
+                id: 2,
+                price: 60000,
+                title: 'Black Monastery'
+            }
+        ];
+
+
+        var allProducts = products.slice(); // 전체 상품 목록을 복사하여 초기화
+
+document.addEventListener('DOMContentLoaded', function() {
+    displayProducts(allProducts);
+});
+
+$('#productOptions').change(function() {
+    var selectedOption = $(this).val();
+
+    switch (selectedOption) {
+        case 'sortByPrice':
+            var sortedByPrice = allProducts.slice().sort(function(a, b) {
+                return a.price - b.price;
+            });
+            displayProducts(sortedByPrice);
+            break;
+
+        case 'sortByName':
+            var sortedByName = allProducts.slice().sort(function(a, b) {
+                return a.title.localeCompare(b.title);
+            });
+            displayProducts(sortedByName);
+            break;
+
+        case 'filterByPrice':
+            var filteredByPrice = allProducts.filter(function(product) {
+                return product.price <= 60000;
+            });
+            displayProducts(filteredByPrice);
+            break;
+
+        default:
+            displayProducts(allProducts);
+            break;
+    }
+
+    $(this).val('default'); // 드롭다운을 기본값으로 되돌립니다.
+});
+
+function displayProducts(products) {
+    var container = $('#product-list');
+    container.empty();
+    products.forEach(function(product) {
+        var productHTML = `
+            <div class="col-sm-4">
+                <img src="https://via.placeholder.com/600" class="w-100">
+                <h5>${product.title}</h5>
+                <p>가격 : ${product.price}</p>
+            </div>
+        `;
+        container.append(productHTML);
+    });
+}
+
+let clickCount = 0;
+$('#more').click(function() {
+    let url = '';
+    if (clickCount === 0) {
+        url = 'https://codingapple1.github.io/js/more1.json';
+    } else if (clickCount === 1) {
+        url = 'https://codingapple1.github.io/js/more2.json';
+    }
+
+    $.get(url).done(function(data) {
+        allProducts = allProducts.concat(data); // 새로운 상품을 전체 목록에 추가
+        displayProducts(allProducts); // 전체 목록을 다시 표시
+
+        clickCount++;
+        if (clickCount > 1) {
+            $('#more').hide();
+        }
+    }).fail(function() {
+        alert('상품을 불러오는데 실패했습니다.');
+    });
+});
+
+
+        //        products.forEach(function(product, index) {
+        //            document.querySelectorAll('.card-body h5')[index].innerHTML = product.title;
+        //            document.querySelectorAll('.card-body span')[index].innerHTML = product.price.toLocaleString() + '원';
+        //        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body></html>
